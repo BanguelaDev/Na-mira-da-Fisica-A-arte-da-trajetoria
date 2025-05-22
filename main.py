@@ -98,11 +98,11 @@ class Projetil:
         """
         Desenha a trajetória usando a biblioteca turtle.
         """
-        import turtle
-
+        
         turtle.title("Trajetória do Projétil")
         turtle.bgcolor("white")
-        turtle.speed(0)
+        turtle.speed("fastest")  # Mais rápido possível
+        turtle.tracer(0, 0)      # Desliga atualizações automáticas
 
         escala = 1
         margem = 50
@@ -138,12 +138,27 @@ class Projetil:
 
         # Desenha a trajetória com pontos
         turtle.setheading(self.angulo)
-        turtle.pendown()
         turtle.color("blue")
         turtle.pensize(2)
+
+        tempo_total_animacao = 3  # segundos
+        qtde_pontos = len(self.pontos)
+        delay_por_ponto = tempo_total_animacao / qtde_pontos
+
+        for x, y in self.pontos:
+            turtle.penup()
+            turtle.goto(x * escala, y * escala)
+            turtle.dot(5, "red")
+            turtle.update()
+            time.sleep(delay_por_ponto)
+
+        turtle.goto(self.pontos[0][0] * escala, self.pontos[0][1] * escala)
+        turtle.pendown()
+
         for x, y in self.pontos:
             turtle.goto(x * escala, y * escala)
-            turtle.dot(5, "red")  # Pequeno ponto vermelho em cada ponto
+            turtle.update()
+            time.sleep(delay_por_ponto / 2)
 
         # Ponto final (queda)
         x_final, y_final = self.pontos[-1]
@@ -198,11 +213,11 @@ def simular():
     proj = Projetil(velocidade, angulo, y0, gravidade)
 
     print("\033[1;34m\nCalculando trajetória...\033[0m")
-    time.sleep(1)
+    time.sleep(0.5)
     proj.calcular_trajetoria()
 
     print("\033[1;34mExibindo resultados...\033[0m")
-    time.sleep(1)
+    time.sleep(0.5)
     proj.exibir_resultados()
 
     resposta = input("Deseja exibir o gráfico da simulação? (s/n): ").strip().lower()
